@@ -3,57 +3,47 @@ import { HttpAgent } from "@dfinity/agent";
 // Replace <YOUR_CANISTER_ID> with the actual canister ID
 const canisterId = "<YOUR_CANISTER_ID>";
 
-const canisterIDL = {
+const agent = new HttpAgent();
+const myCanister = agent.createActor(canisterId, {
   sendMessage: async (message: string) => {
-    // Implement the logic for sending a message to local authorities
-    console.log("Sending message:", message);
+    const response = await myCanister.sendMessage(message);
+    return `Sending message: ${message}, Response: ${response}`;
   },
   reportChallenge: async (challenge: string) => {
-    // Implement the logic for reporting a challenge to local authorities
-    console.log("Reporting challenge:", challenge);
+    const response = await myCanister.reportChallenge(challenge);
+    return `Reporting challenge: ${challenge}, Response: ${response}`;
   },
   getChallenges: async () => {
-    // Implement the logic for retrieving all reported challenges
-    console.log("Retrieving challenges");
-    return [];
+    const challenges = await myCanister.getChallenges();
+    return `Retrieving challenges, Challenges: ${challenges}`;
   },
   leaveReview: async (review: string) => {
-    // Implement the logic for leaving a review for local authorities
-    console.log("Leaving review:", review);
+    const response = await myCanister.leaveReview(review);
+    return `Leaving review: ${review}, Response: ${response}`;
   },
   getReviews: async () => {
-    // Implement the logic for retrieving all reviews
-    console.log("Retrieving reviews");
-    return [];
+    const reviews = await myCanister.getReviews();
+    return `Retrieving reviews, Reviews: ${reviews}`;
   },
   donate: async (amount: number) => {
-    // Implement the logic for making a donation to local authorities
-    console.log("Making a donation of", amount);
+    const response = await myCanister.donate(amount);
+    return `Making a donation of ${amount}, Response: ${response}`;
   },
   getDonations: async () => {
-    // Implement the logic for retrieving the total amount of donations
-    console.log("Retrieving donations");
-    return 0;
+    const donations = await myCanister.getDonations();
+    return `Retrieving donations, Total donations: ${donations}`;
   },
-};
-
-const agent = new HttpAgent();
-const myCanister = agent.createActor(canisterId, canisterIDL);
+});
 
 async function main() {
-  await myCanister.sendMessage("Hello, authorities!");
-  await myCanister.reportChallenge("Challenge 1");
-  await myCanister.leaveReview("Great job!");
-  await myCanister.donate(100);
+  console.log(await myCanister.sendMessage("Hello, authorities!"));
+  console.log(await myCanister.reportChallenge("Challenge 1"));
+  console.log(await myCanister.leaveReview("Great job!"));
+  console.log(await myCanister.donate(100));
 
-  const challenges = await myCanister.getChallenges();
-  console.log("Challenges:", challenges);
-
-  const reviews = await myCanister.getReviews();
-  console.log("Reviews:", reviews);
-
-  const donations = await myCanister.getDonations();
-  console.log("Total donations:", donations);
+  console.log(await myCanister.getChallenges());
+  console.log(await myCanister.getReviews());
+  console.log(await myCanister.getDonations());
 }
 
 main().catch((err) => console.error(err));
